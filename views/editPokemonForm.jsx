@@ -21,11 +21,12 @@ class editingPokemon extends React.Component {
     //  message = <h1>List is longer than 100! Bananas!</h1>;
     // }
     console.log(this.props.id);
+    let url = "/pokemon/"+this.props.id+"?_method=PUT"
 
     return (
       <LayoutContainer>
         <div>
-          <form method="POST" action="/pokemon/'+{this.props.id}+'?_method=PUT">
+          <form method="POST" action={url}>
           <input type="text" name="id" placeholder="id" value={this.props.id}/>
           <input type="text" name="num" placeholder="num" value={this.props.num}/>
           <input type="text" name="name" placeholder="name" value={this.props.name}/>
