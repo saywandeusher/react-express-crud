@@ -1,6 +1,5 @@
 var React = require('react');
 var LayoutContainer = require('./layout.jsx');
-var Cola = require('./form.jsx');
 
 class pokemonCreation extends React.Component {
   render() {
@@ -25,8 +24,15 @@ class pokemonCreation extends React.Component {
     return (
     	<LayoutContainer>
 	    	<div>
-	    		<Cola>
-	    		</Cola>
+	    		<form method="POST" action="/pokemon">
+    			<input type="text" name="id" placeholder="id"/>
+    			<input type="text" name="num" placeholder="num"/>
+    			<input type="text" name="name" placeholder="name"/>
+    			<input type="text" name="img" placeholder="img"/>
+    			<input type="text" name="height" placeholder="height"/>
+    			<input type="text" name="weight" placeholder="weight"/>
+    			<input type="submit" value="Create"/>
+    			</form>
 	    	</div>
     	</LayoutContainer>
     );

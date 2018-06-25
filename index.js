@@ -1,9 +1,11 @@
 const express = require('express');
 const jsonfile = require('jsonfile');
+const methodOverride = require('method-override')
 
 const app = express();
 //Allows access to files in public folder
 app.use(express.static('public'));
+app.use(methodOverride('_method'));
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
@@ -29,7 +31,6 @@ app.set('view engine', 'jsx');
  */
 
 // Init express app
-
 
 /**
  * ===================================
@@ -62,37 +63,23 @@ app.set('view engine', 'jsx');
   });
 };
 //create a html page with Form.
-var getFormPage = (request, response) => {
+var createFormPage = (request, response) => {
 
-	// let htmlForm = '<form method="POST" action="/pokemon">' + 
-	// 	'<input type="text" name="id" placeholder="id"/>' +
-	// 	'<input type="text" name="num" placeholder="num"/>' +
-	// 	'<input type="text" name="name" placeholder="name"/>' +
-	// 	'<input type="text" name="img" placeholder="img"/>' +
-	// 	'<input type="text" name="height" placeholder="height"/>' +
-	// 	'<input type="text" name="weight" placeholder="weight"/>' +
-	// 	'<input type="submit" value="Create">' +
-	// 	'</form>';
-
-	// response.send(htmlForm);
   response.render('createPokemonForm');
+
 };
 
 //create a html page with editing Form.
-// var editFormPage = (request, response) => {
+var editFormPage = (request, response) => {
 
-// 	let htmlForm = '<form method="POST" action="/'+ id +'/edit">' + 
-// 		'<input type="text" name="id" placeholder="id"/>' +
-// 		'<input type="text" name="num" placeholder="num"/>' +
-// 		'<input type="text" name="name" placeholder="name"/>' +
-// 		'<input type="text" name="img" placeholder="img"/>' +
-// 		'<input type="text" name="height" placeholder="height"/>' +
-// 		'<input type="text" name="weight" placeholder="weight"/>' +
-// 		'<input type="submit" value="Create">' +
-// 		'</form>';
+  jsonfile.readFile(FILE, (err, obj) => {
+    let index = request.params.id;
+    console.log(index);
+    let selectedPokemon = obj.pokemon[index-1];
+    response.render('editPokemonForm', selectedPokemon);
+  });
 
-// 	response.send(htmlForm);
-// };
+};
 
 var createNewPokemon = (request, response) => {
 	//reads Json file
@@ -125,41 +112,43 @@ var createNewPokemon = (request, response) => {
 	});
 };
 
-// var editPokemon = (request, response) => {
+var editedPokemon = (request, response) => {
 
-// 	jsonfile.readFile('pokedex.json', (err,obj) => {
-// 		let index = request.params.id;
-// 		let editPokemon = {
-//             "id": parseInt(request.body.id),
-//             "num": request.body.num,
-//             "name": request.body.name,
-//             "img": request.body.img,
-//             "height": request.body.height,
-//             "weight": request.body.weight,
-//             "candy": "",
-//             "candy_count": "",
-//             "egg": "",
-//             "avg_spawns": "",
-//             "spawn_time": ""
-//         };
+	jsonfile.readFile('pokedex.json', (err,obj) => {
+		let index = request.params.id;
+		let editPokemon = {
+            "id": parseInt(request.body.id),
+            "num": request.body.num,
+            "name": request.body.name,
+            "img": request.body.img,
+            "height": request.body.height,
+            "weight": request.body.weight,
+            "candy": "",
+            "candy_count": "",
+            "egg": "",
+            "avg_spawns": "",
+            "spawn_time": ""
+        };
 
-//         obj.pokemon[index] = editPokemon;
+        obj.pokemon[index-1] = editPokemon;
 
-//         let newObj = obj;
+        let newObj = obj;
 
-// 		jsonfile.writeFile('pokedex.json', newObj, (err) => {
+		jsonfile.writeFile('pokedex.json', newObj, (err) => {
 
-// 			response.send('Edited pokemon! Check pokedex.json');
+			response.send('Edited pokemon! Check pokedex.json');
 
-//       	});        
-// 	});
-// };
+      	});        
+	});
+};
 
 app.get('/:id', getPokemonInfo)
-   .get('/pokemon/new', getFormPage)
+   .get('/pokemon/new', createFormPage)
    .post('/pokemon', createNewPokemon)
-   // .get('/pokemon/edit', editFormPage)
-   // .put('/:id/edit', editPokemon);
+   .get('/:id/edit', editFormPage)
+   .put('/pokemon/:id', editedPokemon);
+
+
 
 /**
  * ===================================

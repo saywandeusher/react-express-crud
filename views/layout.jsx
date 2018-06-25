@@ -5,7 +5,7 @@ class LayoutContainer extends React.Component {
   	return ( 
       <html>
   		  <head>
-  			 <title>Pokedex1</title>
+  			 <title>Pokedex</title>
   		  </head>
   		  <body>
   			 {this.props.children}
